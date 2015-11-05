@@ -1,11 +1,62 @@
 import React from 'react';
 
 export default class Note extends React.Component {
-  render() {
-    return <div className="ui container">
-    <h1>Learn react </h1>
-    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  constructor(props) {
+    super(props);
 
-    </div>;
+    this.finishEdit = this.finishEdit.bind(this);
+    this.checkEnter = this.checkEnter.bind(this);
+    this.edit = this.edit.bind(this);
+    this.renderEdit = this.renderEdit.bind(this);
+    this.renderTask = this.renderTask.bind(this);
+
+    this.state = {
+      editing: false
+    };
+  }
+  render() {
+    const editing = this.state.editing;
+
+    return (
+      <div>
+      {editing ? this.renderEdit() : this.renderTask()}
+      </div>
+    );
+  }
+  renderEdit() {
+    return <input type="text"
+    autoFocus={true}
+    defaultValue={this.props.task}
+    onBlur={this.finishEdit}
+    onKeyPress={this.checkEnter} />;
+  }
+  renderTask() {
+    const onDelete = this.props.onDelete;
+    return (
+      <div onClick={this.edit}>
+      <span className="task">{this.props.task}</span>
+      {onDelete ? this.renderDelete() : null }
+      </div>
+    );
+  }
+  renderDelete() {
+    return <button className="delete" onClick={this.props.onDelete}>x</button>;
+  }
+  edit() {
+    this.setState({
+      editing: true
+    });
+  }
+  checkEnter(e) {
+    if(e.key === 'Enter') {
+      this.finishEdit(e);
+    }
+  }
+  finishEdit(e) {
+    this.props.onEdit(e.target.value);
+
+    this.setState({
+      editing: false
+    });
   }
 }
