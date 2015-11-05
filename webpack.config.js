@@ -7,13 +7,25 @@ var TARGET = process.env.npm_lifecycle_event;
 var ROOT_PATH = path.resolve(__dirname);
 var APP_PATH = path.resolve(ROOT_PATH, 'app');
 
+process.env.BABEL_ENV = TARGET;
+
 var common = {
   entry: APP_PATH,
+  /* add resolve.extensions */
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     loaders: [
       {
         test: /\.css$/,
         loaders: ['style', 'css'],
+        include: APP_PATH
+      },
+      /* set up jsx */
+      {
+        test: /\.jsx?$/,
+        loaders: ['babel'],
         include: APP_PATH
       }
     ]
